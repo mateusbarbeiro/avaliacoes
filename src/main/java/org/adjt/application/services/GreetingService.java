@@ -1,4 +1,4 @@
-package org.adjt;
+package org.adjt.application.services;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

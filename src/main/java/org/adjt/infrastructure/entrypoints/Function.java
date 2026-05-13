@@ -1,4 +1,4 @@
-package org.adjt;
+package org.adjt.infrastructure.entrypoints;
 
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
@@ -10,11 +10,10 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
 import jakarta.inject.Inject;
+import org.adjt.application.services.GreetingService;
+
 import java.util.Optional;
 
-/**
- * Azure Functions with HTTP Trigger integrated with Quarkus
- */
 public class Function {
     @Inject
     GreetingService service;
