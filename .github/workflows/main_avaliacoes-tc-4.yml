@@ -51,6 +51,6 @@ jobs:
         with:
           app-name: 'avaliacoes-tc-4'
           slot-name: 'Production'
-          package: '${{ env.PACKAGE_DIRECTORY }}'
+          package: './target/azure-functions'
           respect-pom-xml: true
           
