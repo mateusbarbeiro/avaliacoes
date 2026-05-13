@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Java project to Azure Function App - avaliacoes-tc-4
+name: Build e deploy projeto Quarkus para Azure Function App - avaliacoes-tc-4
 
 on:
   push:
@@ -10,29 +7,29 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_NAME: avaliacoes-tc-4 # set this to your function app name on Azure
-  PACKAGE_DIRECTORY: '.' # set this to the directory which contains pom.xml file
-  JAVA_VERSION: '21' # set this to the java version to use
+  AZURE_FUNCTIONAPP_NAME: avaliacoes-tc-4 # nome da function app no Azure
+  PACKAGE_DIRECTORY: '.' # diretório que contém pom.xml
+  JAVA_VERSION: '21' # versão Java
 
 jobs:
   build-and-deploy:
     runs-on: windows-latest
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write # Isto é necessário para solicitar o JWT
+      contents: read # Isto é necessário para actions/checkout
 
     steps:
-      - name: 'Checkout GitHub Action'
+      - name: 'Fazer checkout do GitHub Action'
         uses: actions/checkout@v6
 
-      - name: Setup Java Sdk ${{ env.JAVA_VERSION }}
+      - name: Configurar Java Sdk ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v5
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'microsoft'
-          cache: 'maven'
+          cache: 'maven' # cache das dependências da aplicação
 
-      - name: 'Restore Project Dependencies Using Mvn'
+      - name: 'Restaurar Dependências do Projeto Usando Mvn'
         shell: pwsh
         run: |
           pushd './${{ env.PACKAGE_DIRECTORY }}'
@@ -50,14 +47,14 @@ jobs:
           # Salva o caminho exato dessa pasta como uma variável de ambiente para o próximo step
           echo "FUNC_PACKAGE_PATH=$($funcDir.FullName)" >> $env:GITHUB_ENV
 
-      - name: Login to Azure
+      - name: Fazer login no Azure
         uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_26A3F7D510BC4C64922B3248045779C5 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_31D03D16C9614FD5A540D556DC68B117 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_789AC816C7794732888C4103D97160B9 }}
 
-      - name: 'Run Azure Functions Action'
+      - name: 'Executar Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
