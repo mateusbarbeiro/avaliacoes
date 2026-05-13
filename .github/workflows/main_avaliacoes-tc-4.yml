@@ -30,14 +30,7 @@ jobs:
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'microsoft'
-
-      - name: Cache de Dependências Maven
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven
+          cache: 'maven'
 
       - name: 'Restore Project Dependencies Using Mvn'
         shell: pwsh
@@ -45,7 +38,18 @@ jobs:
           pushd './${{ env.PACKAGE_DIRECTORY }}'
           mvn clean package
           popd
-      
+
+      - name: 'Descobrir diretório do pacote gerado'
+        id: find-package
+        shell: pwsh
+        run: |
+          # Entra na pasta azure-functions e pega a primeira pasta gerada (com o timestamp dinâmico)
+          $funcDir = Get-ChildItem -Path './${{ env.PACKAGE_DIRECTORY }}/target/azure-functions' -Directory | Select-Object -First 1
+          Write-Host "Pasta dinâmica encontrada: $($funcDir.FullName)"
+          
+          # Salva o caminho exato dessa pasta como uma variável de ambiente para o próximo step
+          echo "FUNC_PACKAGE_PATH=$($funcDir.FullName)" >> $env:GITHUB_ENV
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -57,17 +61,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'avaliacoes-tc-4'
+          app-name: '${{env.AZURE_FUNCTIONAPP_NAME}}'
           slot-name: 'Production'
-          package: '${{ env.PACKAGE_DIRECTORY }}'
+          package: '${{ env.FUNC_PACKAGE_PATH }}'
           respect-pom-xml: true
-
-      - name: 'Debug: Listar diretórios gerados no target'
-        shell: pwsh
-        run: |
-          Write-Host "=== Listando pastas dentro de . ==="
-          Get-ChildItem -Path './${{ env.PACKAGE_DIRECTORY }}' -Directory
-          
-          Write-Host "=== Estrutura completa de arquivos ==="
-          tree './${{ env.PACKAGE_DIRECTORY }}' /f
-          
