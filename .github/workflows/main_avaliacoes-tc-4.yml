@@ -45,7 +45,7 @@ jobs:
         shell: pwsh
         run: |
           pushd './${{ env.PACKAGE_DIRECTORY }}'
-          ./mvnw clean package azure-functions:package -DskipTests
+          ./mvnw clean package -DskipTests
           popd
 
       - name: Fazer login no Azure
