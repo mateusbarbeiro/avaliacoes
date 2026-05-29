@@ -16,8 +16,8 @@
         <quarkus.platform.version>3.35.2</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
-        <azure.functions.resourceGroup>avaliacoes</azure.functions.resourceGroup>
-        <azure.functions.appName>avaliacoes</azure.functions.appName>
+        <azure.functions.resourceGroup>${env.AZURE_RESOURCE_GROUP}</azure.functions.resourceGroup>
+        <azure.functions.appName>${env.AZURE_FUNCTION_APP_NAME}</azure.functions.appName>
     </properties>
 
     <dependencyManagement>

@@ -62,4 +62,4 @@ jobs:
           app-name: '${{ env.AZURE_FUNCTION_APP_NAME }}'
           slot-name: 'Production'
           package: '${{ env.PACKAGE_DIRECTORY }}/target/azure-functions/avaliacoes'
-          respect-pom-xml: true
+          respect-pom-xml: false
