@@ -18,7 +18,7 @@ env:
   PACKAGE_DIRECTORY: '.' # diretório que contém pom.xml
   JAVA_VERSION: '21' # versão Java
   AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
-  AZURE_FUNCTION_APP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+  AZURE_FUNCTION_APP_NAME: ${{ vars.AZURE_FUNCTION_APP_NAME }}
 
 jobs:
   build-and-deploy:
