@@ -16,6 +16,8 @@
         <quarkus.platform.version>3.35.2</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
+        <azure.functions.resourceGroup>${env.AZURE_RESOURCE_GROUP}</azure.functions.resourceGroup>
+        <azure.functions.appName>${env.AZURE_FUNCTION_APP_NAME}</azure.functions.appName>
     </properties>
 
     <dependencyManagement>
@@ -104,6 +106,33 @@
                         <maven.home>${maven.home}</maven.home>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-functions-maven-plugin</artifactId>
+                <configuration>
+                    <resourceGroup>${azure.functions.resourceGroup}</resourceGroup>
+                    <appName>${azure.functions.appName}</appName>
+                    <runtime>
+                        <os>linux</os>
+                        <javaVersion>21</javaVersion>
+                    </runtime>
+                    <appSettings>
+                        <property>
+                            <name>FUNCTIONS_EXTENSION_VERSION</name>
+                            <value>~4</value>
+                        </property>
+                    </appSettings>
+                    <skipInstallExtensions>true</skipInstallExtensions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>package-functions</id>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

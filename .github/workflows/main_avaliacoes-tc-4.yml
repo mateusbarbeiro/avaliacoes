@@ -17,6 +17,8 @@ on:
 env:
   PACKAGE_DIRECTORY: '.' # diretório que contém pom.xml
   JAVA_VERSION: '21' # versão Java
+  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+  AZURE_FUNCTION_APP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
 
 jobs:
   build-and-deploy:
@@ -34,15 +36,15 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'microsoft'
+          distribution: 'temurin'
           cache: 'maven' # cache das dependências da aplicação
 
-#      - name: 'Restaurar Dependências do Projeto Usando Mvn'
-#        shell: pwsh
-#        run: |
-#          pushd './${{ env.PACKAGE_DIRECTORY }}'
-#          mvn clean package
-#          popd
+      - name: 'Restaurar Dependências do Projeto Usando Mvn'
+        shell: pwsh
+        run: |
+          pushd './${{ env.PACKAGE_DIRECTORY }}'
+          ./mvnw clean package azure-functions:package -DskipTests
+          popd
 
       - name: Fazer login no Azure
         uses: azure/login@v2
@@ -55,7 +57,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: '${{vars.AZURE_FUNCTIONAPP_NAME}}'
+          app-name: '${{env.AZURE_FUNCTIONAPP_NAME}}'
           slot-name: 'Production'
           package: '${{ env.PACKAGE_DIRECTORY }}'
           respect-pom-xml: true
