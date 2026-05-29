@@ -9,10 +9,10 @@ on:
       ambiente:
         description: 'Ambiente de deploy'
         required: true
-        default: 'dev_mateus'
+        default: 'dev-mateus'
         type: choice
         options:
-          - dev_mateus
+          - dev-mateus
 
 env:
   PACKAGE_DIRECTORY: '.' # diretório que contém pom.xml
