@@ -16,8 +16,11 @@
         <quarkus.platform.version>3.35.2</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
+        <quarkus.package.jar.type>legacy-jar</quarkus.package.jar.type>
         <azure.functions.resourceGroup>${env.AZURE_RESOURCE_GROUP}</azure.functions.resourceGroup>
         <azure.functions.appName>${env.AZURE_FUNCTION_APP_NAME}</azure.functions.appName>
+<!--        <azure.functions.resourceGroup>avaliacoes</azure.functions.resourceGroup>-->
+<!--        <azure.functions.appName>avaliacoes</azure.functions.appName>-->
     </properties>
 
     <dependencyManagement>
@@ -69,6 +72,15 @@
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus.platform.version}</version>
                 <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>build</goal>
+                            <goal>generate-code</goal>
+                            <goal>generate-code-tests</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -107,33 +119,34 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.microsoft.azure</groupId>
-                <artifactId>azure-functions-maven-plugin</artifactId>
-                <configuration>
-                    <resourceGroup>${azure.functions.resourceGroup}</resourceGroup>
-                    <appName>${azure.functions.appName}</appName>
-                    <runtime>
-                        <os>linux</os>
-                        <javaVersion>21</javaVersion>
-                    </runtime>
-                    <appSettings>
-                        <property>
-                            <name>FUNCTIONS_EXTENSION_VERSION</name>
-                            <value>~4</value>
-                        </property>
-                    </appSettings>
-                    <skipInstallExtensions>true</skipInstallExtensions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>package-functions</id>
-                        <goals>
-                            <goal>package</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>com.microsoft.azure</groupId>-->
+<!--                <artifactId>azure-functions-maven-plugin</artifactId>-->
+<!--                <version>1.42.0</version>-->
+<!--                <configuration>-->
+<!--                    <resourceGroup>${azure.functions.resourceGroup}</resourceGroup>-->
+<!--                    <appName>${azure.functions.appName}</appName>-->
+<!--                    <runtime>-->
+<!--                        <os>linux</os>-->
+<!--                        <javaVersion>21</javaVersion>-->
+<!--                    </runtime>-->
+<!--                    <appSettings>-->
+<!--                        <property>-->
+<!--                            <name>FUNCTIONS_EXTENSION_VERSION</name>-->
+<!--                            <value>~4</value>-->
+<!--                        </property>-->
+<!--                    </appSettings>-->
+<!--                    <skipInstallExtensions>true</skipInstallExtensions>-->
+<!--                </configuration>-->
+<!--&lt;!&ndash;                <executions>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <execution>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <id>package-functions</id>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <goals>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <goal>package</goal>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </goals>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </execution>&ndash;&gt;-->
+<!--&lt;!&ndash;                </executions>&ndash;&gt;-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>
