@@ -17,8 +17,6 @@ on:
 env:
   PACKAGE_DIRECTORY: '.' # diretório que contém pom.xml
   JAVA_VERSION: '21' # versão Java
-  AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
-  AZURE_FUNCTION_APP_NAME: ${{ vars.AZURE_FUNCTION_APP_NAME }}
 
 jobs:
   build-and-deploy:
@@ -27,6 +25,10 @@ jobs:
     permissions:
       id-token: write # Isto é necessário para solicitar o JWT
       contents: read # Isto é necessário para actions/checkout
+
+    env:
+      AZURE_RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+      AZURE_FUNCTION_APP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
 
     steps:
       - name: 'Fazer checkout do GitHub Action'
