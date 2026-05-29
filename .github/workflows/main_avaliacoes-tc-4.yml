@@ -37,15 +37,15 @@ jobs:
           distribution: 'microsoft'
           cache: 'maven' # cache das dependências da aplicação
 
-      - name: 'Restaurar Dependências do Projeto Usando Mvn'
-        shell: pwsh
-        run: |
-          pushd './${{ env.PACKAGE_DIRECTORY }}'
-          mvn clean package
-          popd
+#      - name: 'Restaurar Dependências do Projeto Usando Mvn'
+#        shell: pwsh
+#        run: |
+#          pushd './${{ env.PACKAGE_DIRECTORY }}'
+#          mvn clean package
+#          popd
 
       - name: Fazer login no Azure
-        uses: azure/login@v3
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.CLIENTID }}
           tenant-id: ${{ secrets.TENANTID }}
