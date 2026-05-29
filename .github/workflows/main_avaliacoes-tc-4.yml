@@ -21,7 +21,7 @@ env:
 jobs:
   build-and-deploy:
     environment: ${{ inputs.ambiente }}
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       id-token: write # Isto é necessário para solicitar o JWT
       contents: read # Isto é necessário para actions/checkout
