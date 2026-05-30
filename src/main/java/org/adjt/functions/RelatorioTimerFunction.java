@@ -10,8 +10,8 @@ public class RelatorioTimerFunction {
     @Transactional
     @FunctionName("GerarRelatorioSemanal")
     public void run(
-            // Expressão CRON: Roda a cada 30 segundos
-            @TimerTrigger(name = "timerInfo", schedule = "*/30 * * * * *") String timerInfo,
+            // Expressão CRON: Roda uma vez por semana (domingo à meia-noite)
+            @TimerTrigger(name = "timerInfo", schedule = "0 0 0 * * 0") String timerInfo,
             final ExecutionContext context) {
 
         context.getLogger().info("Iniciando geração de relatório semanal...");

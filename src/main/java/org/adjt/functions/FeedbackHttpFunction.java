@@ -1,5 +1,7 @@
 package org.adjt.functions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.microsoft.azure.functions.*;
 import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
@@ -12,41 +14,70 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public class FeedbackHttpFunction {
+    
     @Inject
     AvaliacaoService service;
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @FunctionName("ReceberFeedback")
     public HttpResponseMessage run(
-            @HttpTrigger(name = "req", methods = {HttpMethod.POST}, authLevel = AuthorizationLevel.ANONYMOUS) HttpRequestMessage<Optional<Avaliacao>> request,
+            @HttpTrigger(
+                name = "req", 
+                methods = {HttpMethod.POST}, 
+                authLevel = AuthorizationLevel.ANONYMOUS
+            ) HttpRequestMessage<Optional<String>> request,
             final ExecutionContext context) {
 
         context.getLogger().info("Iniciando processamento de nova avaliação via POST.");
 
-        Optional<Avaliacao> avaliacaoOpt = request.getBody();
-
-        if (avaliacaoOpt.isEmpty())
-            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
-                    .body("O corpo da requisição não pode estar vazio.")
-                    .build();
-
         try {
-            Avaliacao avaliacao = service.salvarAvaliacao(avaliacaoOpt.get());
+            // Obter o corpo da requisição como String
+            Optional<String> bodyOpt = request.getBody();
+
+            if (bodyOpt.isEmpty() || bodyOpt.get().trim().isEmpty())
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                        .body("O corpo da requisição não pode estar vazio.")
+                        .build();
+
+            Avaliacao avaliacao = objectMapper.readValue(bodyOpt.get(), Avaliacao.class);
+
+            if (avaliacao.nota == null)
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                        .body("Nota é obrigatória.")
+                        .build();
+
+            // Validações básicas
+            if (avaliacao.descricao == null || avaliacao.descricao.trim().isEmpty())
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                        .body("Descrição é obrigatória.")
+                        .build();
+
+            // Salvar a avaliação
+            Avaliacao avaliacaoSalva = service.salvarAvaliacao(avaliacao);
+
+            objectMapper.registerModule(new JavaTimeModule());
+            String jsonResposta = objectMapper.writeValueAsString(avaliacaoSalva);
 
             return request.createResponseBuilder(HttpStatus.CREATED)
                     .header("Content-Type", "application/json")
-                    .body(avaliacao)
+                    .body(jsonResposta)
                     .build();
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            context.getLogger().warning("JSON inválido: " + e.getMessage());
+            return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                    .body("Formato JSON inválido: " + e.getMessage())
+                    .build();
+
         } catch (IllegalArgumentException e) {
             context.getLogger().warning("Avaliação inválida: " + e.getMessage());
-
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
                     .body("Avaliação inválida: " + e.getMessage())
                     .build();
-        }
-        catch (Exception e) {
-            context.getLogger().severe("Erro ao salvar no banco: " + e.getMessage());
-            context.getLogger().severe(Arrays.toString(e.getStackTrace()));
 
+        } catch (Exception e) {
+            context.getLogger().severe("Erro ao processar avaliação: " + e.getMessage());
+            context.getLogger().severe(Arrays.toString(e.getStackTrace()));
             return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro interno ao processar a avaliação.")
                     .build();
