@@ -55,6 +55,17 @@ jobs:
           tenant-id: ${{ secrets.TENANTID }}
           subscription-id: ${{ secrets.SUBSCRIPTIONID }}
 
+      - name: 'Configurar variáveis de ambiente no Function App'
+        run: |
+          az functionapp config appsettings set `
+            --name ${{ env.AZURE_FUNCTION_APP_NAME }} `
+            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} `
+            --settings `
+              DB_URL="${{ secrets.DB_URL }}" `
+              DB_USERNAME="${{ secrets.DB_USER }}" `
+              DB_PASSWORD="${{ secrets.DB_PASSWORD }}" `
+        shell: pwsh
+
       - name: 'Executar Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
