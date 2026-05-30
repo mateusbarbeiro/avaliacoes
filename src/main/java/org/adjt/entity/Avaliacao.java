@@ -33,6 +33,7 @@ public class Avaliacao extends PanacheEntity {
             this.dataCriacao = LocalDateTime.now();
     }
 
+    @JsonIgnore
     public NivelCriticidade getUrgencia() {
         if (nota > 7)
             return NORMAL;
