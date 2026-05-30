@@ -62,7 +62,7 @@ jobs:
             --resource-group ${{ env.AZURE_RESOURCE_GROUP }} `
             --settings `
               DB_URL="${{ secrets.DB_URL }}" `
-              DB_USERNAME="${{ secrets.DB_USER }}" `
+              DB_USER="${{ secrets.DB_USER }}" `
               DB_PASSWORD="${{ secrets.DB_PASSWORD }}" `
         shell: pwsh
 
