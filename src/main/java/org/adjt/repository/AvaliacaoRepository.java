@@ -41,7 +41,23 @@ public class AvaliacaoRepository implements PanacheRepository<Avaliacao> {
     }
 
     public Map<String, Long> buscarAgrupadoPorDia(LocalDateTime dataLimite) {
-        String sql = "SELECT to_char(a.dataCriacao, 'Day'), COUNT(*) FROM Avaliacao a WHERE a.dataCriacao >= :dataLimite GROUP BY to_char(a.dataCriacao, 'Day')";
+        String sql =  """
+                SELECT
+                    CASE trim(to_char(a.dataCriacao, 'Day'))
+                        WHEN 'Monday' THEN 'Segunda-feira'
+                        WHEN 'Tuesday' THEN 'Terça-feira'
+                        WHEN 'Wednesday' THEN 'Quarta-feira'
+                        WHEN 'Thursday' THEN 'Quinta-feira'
+                        WHEN 'Friday' THEN 'Sexta-feira'
+                        WHEN 'Saturday' THEN 'Sábado'
+                        WHEN 'Sunday' THEN 'Domingo'
+                    END,
+                    COUNT(a)
+                FROM Avaliacao a
+                WHERE a.dataCriacao >= :dataLimite
+                GROUP BY trim(to_char(a.dataCriacao, 'Day'))
+                """;
+
         return converterParaMap(entityManager.createQuery(sql, Object[].class)
                 .setParameter("dataLimite", dataLimite)
                 .getResultList());
