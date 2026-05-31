@@ -37,6 +37,7 @@ public class RelatorioSemanalService {
                 "Relatório semanal avaliações",
                 NivelCriticidade.getDadoNota(mediaNota),
                 LocalDateTime.now(),
+                mediaNota,
                 qtdPorDia,
                 qtdPorUrgencia
         );
@@ -51,6 +52,7 @@ public class RelatorioSemanalService {
         html.append("<h2>Relatório Semanal de Avaliações</h2>");
         html.append("<p><strong>Data de Geração:</strong> ").append(dataFormatada).append("</p>");
         html.append("<p><strong>Descrição:</strong> ").append(relatorioDto.descricao()).append("</p>");
+        html.append("<p><strong>Média de notas:</strong> ").append(relatorioDto.descricao()).append("</p>");
         html.append("<p><strong>Nível de Urgência Média:</strong> ").append(relatorioDto.urgencia()).append("</p>");
 
         html.append("<h3>Avaliações por Dia:</h3><ul>");

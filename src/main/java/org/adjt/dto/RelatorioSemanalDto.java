@@ -9,6 +9,7 @@ public record RelatorioSemanalDto(
         String descricao,
         NivelCriticidade urgencia,
         LocalDateTime dataGeracao,
+        Double mediaNota,
         Map<String, Long> quantidadeAvaliacoesPorDia,
         Map<String, Long> quantidadeAvaliacoesPorUrgencia
 ) {
