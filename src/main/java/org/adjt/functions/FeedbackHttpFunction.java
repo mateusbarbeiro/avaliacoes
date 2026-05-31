@@ -8,6 +8,7 @@ import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 import com.microsoft.azure.functions.annotation.QueueOutput;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.adjt.entity.Avaliacao;
 import org.adjt.services.AvaliacaoService;
 
@@ -21,6 +22,7 @@ public class FeedbackHttpFunction {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Transactional
     @FunctionName("ReceberFeedback")
     public HttpResponseMessage run(
             @HttpTrigger(

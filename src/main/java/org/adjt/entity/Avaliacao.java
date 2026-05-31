@@ -35,13 +35,7 @@ public class Avaliacao extends PanacheEntity {
 
     @JsonIgnore
     public NivelCriticidade getUrgencia() {
-        if (nota > 7)
-            return NORMAL;
-
-        if (nota > 5)
-            return URGENTE;
-
-        return CRITICO;
+       return NivelCriticidade.getDadoNota(nota);
     }
 
     @JsonIgnore

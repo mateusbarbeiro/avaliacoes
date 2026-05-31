@@ -1,12 +1,8 @@
 package org.adjt.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.microsoft.azure.functions.ExecutionContext;
-import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.Mailer;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.adjt.entity.Avaliacao;
@@ -18,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 public class AvisoUrgenciaService {
 
     @Inject
-    Mailer mailer;
+    MailSender mailSender;
 
     @ConfigProperty(name = "admin.email")
     String adminEmailNotificado;
@@ -46,7 +42,6 @@ public class AvisoUrgenciaService {
                 avaliacao.getUrgencia().toString()
         );
 
-        // Monta e envia o e-mail em apenas uma linha
-        mailer.send(Mail.withText(adminEmailNotificado, "🚨 ALERTA: Avaliação Crítica", corpoEmail));
+        mailSender.sendEmail(adminEmailNotificado, "ALERTA: Avaliação Crítica", corpoEmail);
     }
 }
