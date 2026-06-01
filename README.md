@@ -19,17 +19,16 @@ graph TD
 
     %% Infraestrutura Cloud
     subgraph Azure Cloud
-        Gateway[API Gateway]
-      
+  
         %% Funções Serverless e Filas
         Func1[Azure Function 1<br>HTTP Trigger]
         MessageQueue[[Fila de Mensagens<br>Storage Queue]]
         Func2[Azure Function 2<br>Queue Trigger]
         Func3[Azure Function 3<br>Timer Trigger]
-      
+  
         %% Banco de Dados
         Database[(Banco de Dados)]
-      
+  
         %% Monitoramento
         AppInsights([Application Insights / Azure Monitor])
     end
@@ -38,8 +37,7 @@ graph TD
     QuarkusMailer[Quarkus Mailer<br>com Gmail SMTP]
 
     %% Fluxo principal de requisição
-    Client -- "POST /avaliação" --> Gateway
-    Gateway -- "Aciona" --> Func1
+    Client -- "POST /avaliação" --> Func1
   
     %% Fluxo de Banco de Dados e Fila (Urgência)
     Func1 -- "Salva feedback" --> Database

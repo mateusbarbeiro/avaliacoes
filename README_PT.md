@@ -100,8 +100,7 @@ graph TD
 
     %% Infraestrutura Cloud
     subgraph Azure Cloud
-        Gateway[API Gateway]
-  
+
         %% Funções Serverless e Filas
         Func1[Azure Function 1<br>HTTP Trigger]
         MessageQueue[[Fila de Mensagens<br>Storage Queue]]
@@ -119,8 +118,7 @@ graph TD
     QuarkusMailer[Quarkus Mailer<br>com Gmail SMTP]
 
     %% Fluxo principal de requisição
-    Client -- "POST /avaliação" --> Gateway
-    Gateway -- "Aciona" --> Func1
+    Client -- "POST /avaliação" --> Func1
   
     %% Fluxo de Banco de Dados e Fila (Urgência)
     Func1 -- "Salva feedback" --> Database
@@ -393,23 +391,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-    
+  
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           java-version: '21'
           distribution: 'temurin'
-    
+  
       - name: Build with Maven
         run: mvn clean package -DskipTests
-    
+  
       - name: Login to Azure
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.CLIENTID }}
           tenant-id: ${{ secrets.TENANTID }}
           subscription-id: ${{ secrets.SUBSCRIPTIONID }}
-    
+  
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
         with:
